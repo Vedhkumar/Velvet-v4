@@ -167,9 +167,12 @@ contract PortfolioFactory is
    * @notice This function enables to create a new non custodial portfolio
    * @param initData Accepts the input data from the user
    */
+  // q why there is no owner for the funds?
+  // q what if the portfolio is for personal use?
   function createPortfolioNonCustodial(
     FunctionParameters.PortfolioCreationInitData memory initData
   ) external virtual nonReentrant {
+    //q why using the array of one length why not use the address directly
     address[] memory _owner = new address[](1);
     _owner[0] = address(0x0000000000000000000000000000000000000000);
     _createPortfolio(initData, false, _owner, 1);

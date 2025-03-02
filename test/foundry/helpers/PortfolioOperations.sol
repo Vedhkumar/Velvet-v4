@@ -6,6 +6,8 @@ import {Permit2Helper, IAllowanceTransfer} from "./Permit2Helper.sol";
 import {IPortfolio} from "../../../contracts/core/interfaces/IPortfolio.sol";
 
 import {IERC20} from "../interfaces/IERC20.sol";
+// @changed
+import { FunctionParameters } from "contracts/FunctionParameters.sol";
 
 import "forge-std/console.sol";
 
@@ -208,7 +210,9 @@ contract PortfolioOperations is Permit2Helper {
     address _withdrawer,
     address _withdrawInBehalfOf,
     address _tokenReceiver,
-    uint256 _withdrawAmount
+    uint256 _withdrawAmount,
+        // @changed
+    FunctionParameters.withdrawRepayParams calldata repayData
   ) internal {
     if (_withdrawer == owner) {
       console.log("---- WITHDRAWAL OWNER ---");
@@ -231,7 +235,9 @@ contract PortfolioOperations is Permit2Helper {
     portfolio.multiTokenWithdrawalFor(
       _withdrawInBehalfOf,
       _tokenReceiver,
-      _withdrawAmount
+      _withdrawAmount,
+      // @changed
+      repayData
     );
     vm.stopPrank();
 
@@ -260,7 +266,10 @@ contract PortfolioOperations is Permit2Helper {
     }
   }
 
-  function _withdraw(address _withdrawer, uint256 _withdrawAmount) internal {
+  function _withdraw(address _withdrawer, uint256 _withdrawAmount,
+          // @changed
+    FunctionParameters.withdrawRepayParams calldata repayData
+  ) internal {
     if (_withdrawer == owner) {
       console.log("---- WITHDRAWAL OWNER ---");
     } else if (_withdrawer == nonOwner) {
@@ -276,7 +285,7 @@ contract PortfolioOperations is Permit2Helper {
 
     vm.startPrank(_withdrawer);
 
-    portfolio.multiTokenWithdrawal(_withdrawAmount);
+    portfolio.multiTokenWithdrawal(_withdrawAmount,repayData);
 
     vm.stopPrank();
 
